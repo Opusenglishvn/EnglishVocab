@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Opus English</title>
+<style>
+:root{--bg:#fff7e0;--ink:#3a2e5a;--card:#fff;--line:#e5d5bf;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#241f3a;--ink:#fff3d6;--card:#3a3360;--line:#554c85}}
+:root[data-theme="dark"]{--bg:#241f3a;--ink:#fff3d6;--card:#3a3360;--line:#554c85}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS",system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+#app{max-width:480px;margin:0 auto;padding:14px;display:flex;flex-direction:column;gap:14px}
+h1{margin:6px 0;text-align:center;font-size:34px}
+button{font:inherit;border:0;cursor:pointer;color:#fff;border-radius:28px;box-shadow:0 5px 0 rgba(0,0,0,.18)}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:18px;font-size:30px;font-weight:700}
+.tile .big{font-size:72px;line-height:1}
+.grid .tile{font-size:22px;padding:14px}.grid .tile .big{font-size:54px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top button{background:var(--card);color:var(--ink);font-size:28px;padding:8px 16px}
+.stars{font-size:28px;letter-spacing:2px}
+.card{background:var(--card);border-radius:32px;padding:20px;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.12);user-select:none}
+.pic{font-size:150px;line-height:1.1;display:flex;justify-content:center;align-items:center;height:170px}
+.pic img{max-height:160px;max-width:100%;border-radius:18px}
+.dot{display:inline-block;width:130px;height:130px;border-radius:50%;border:5px solid rgba(0,0,0,.15)}
+.txt{font-size:84px;font-weight:800}
+.word{font-size:56px;font-weight:800;margin-top:6px}
+.row{display:flex;gap:12px;justify-content:center}
+.row button{flex:1;font-size:40px;padding:16px}
+.choices{display:grid;gap:12px}
+.choice{background:var(--card);color:var(--ink);padding:10px;display:flex;justify-content:center;align-items:center;height:150px;font-size:96px;overflow:hidden}
+.choice .dot{width:100px;height:100px}.choice .txt{font-size:56px}.choice img{max-height:130px;max-width:100%;border-radius:14px}
+.shake{animation:sh .4s}@keyframes sh{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.pop{animation:pp .5s}@keyframes pp{50%{transform:scale(1.15)}}
+.q{font-size:28px;font-weight:700;text-align:center}
+.trophy{font-size:120px;text-align:center;animation:pp 1s infinite}
+.small{background:var(--card);color:var(--ink);font-size:16px;padding:10px 18px;align-self:center;border:2px solid var(--line)}
+.row .lvl{background:var(--card);color:var(--ink);border:2px solid var(--line);font-size:14px;padding:10px 2px}
+.row .lvl.on{background:#ff7a59;color:#fff;border-color:#ff7a59}
+.slots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.slot{width:38px;height:50px;border-bottom:4px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800}
+.slot.gap{border:0;width:14px}
+.tiles{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.lt{background:#8e6bff;font-size:30px;font-weight:800;width:56px;height:60px;padding:0}
+.lt.used{visibility:hidden}
+.tin{font-size:28px;text-align:center;border:3px solid var(--line);border-radius:16px;padding:12px;background:var(--card);color:var(--ink);width:100%;box-sizing:border-box}
+.fch{background:var(--card);color:var(--ink);font-size:28px;font-weight:800;padding:18px}
+.wrapl{flex-wrap:wrap}
+/* editor */
+.erow{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.l1,.l2{display:flex;align-items:center;gap:6px}
+.th{width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden;flex:none}
+.th img{width:48px;height:48px;object-fit:cover;border-radius:8px}
+.th .dot{width:34px;height:34px;border-width:2px}.th .txt{font-size:18px}
+.erow input[type=text],.erow input:not([type]){font-size:16px;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--bg);color:var(--ink);min-width:0}
+.w,.qin,.sin{flex:1}.em{width:64px;text-align:center}
+.ic{padding:8px 10px;background:transparent;color:var(--ink);font-size:18px;box-shadow:none}
+.l2 label{font-size:14px;white-space:nowrap}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.acts button{padding:11px 20px;font-size:16px;background:#6ccf6c}
+.acts button.alt{background:var(--card);color:var(--ink);border:2px solid var(--line)}
+.hint{font-size:14px;opacity:.85;margin:0}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<input type="file" id="file" accept="image/*" class="hide">
+<script>
+const $=document.getElementById("app"),g=id=>document.getElementById(id);
+const DEF=[
+["animals","Animals","🐶","#ff7a59",1,[["🐶","dog"],["🐱","cat"],["🐟","fish"],["🐦","bird"],["🐮","cow"],["🐷","pig"],["🐰","rabbit"],["🐘","elephant"]]],
+["food","Food","🍎","#4cb8ff",1,[["🍎","apple"],["🍌","banana"],["🍞","bread"],["🥛","milk"],["🍊","orange"],["🍇","grapes",1],["🍓","strawberry"],["🥚","egg"]]],
+["colors","Colors","🌈","#6ccf6c",0,[["#e53935","red"],["#1e88e5","blue"],["#fdd835","yellow"],["#43a047","green"],["#fb8c00","orange"],["#8e24aa","purple"],["#ec407a","pink"],["#212121","black"]]],
+["numbers","Numbers","🔢","#ffb300",0,[["1","one"],["2","two"],["3","three"],["4","four"],["5","five"],["6","six"],["7","seven"],["8","eight"],["9","nine"],["10","ten"]]],
+["body","Body","🖐️","#ec6aa8",1,[["👁️","eye"],["👂","ear"],["👃","nose"],["👄","mouth"],["✋","hand"],["🦶","foot"],["🦷","tooth"],["💪","arm"]]],
+["family","Family","👨‍👩‍👧","#26a69a",0,[["👩","mom"],["👨","dad"],["👧","sister"],["👦","brother"],["👶","baby"],["👵","grandma"],["👴","grandpa"]]],
+["toys","Toys","🧸","#8e6bff",1,[["🎈","balloon"],["⚽","ball"],["🚗","car"],["🧸","teddy bear"],["📖","book"],["🪁","kite"],["🎒","school bag"],["🥁","drum"]]],
+["sky","Sky","☀️","#42a5f5",1,[["☀️","sun"],["🌧️","rain"],["☁️","cloud"],["❄️","snow"],["🌈","rainbow"],["🌙","moon"],["⭐","star"],["💨","wind"]]],
+["clothes","Clothes","👕","#ef5350",1,[["👕","shirt"],["👖","pants",1],["👗","dress"],["🧦","socks",1],["👟","shoes",1],["🧢","hat"],["🧥","coat"],["🧣","scarf"]]],
+["school","School","🎒","#7e57c2",1,[["✏️","pencil"],["📓","notebook"],["🖍️","crayon"],["✂️","scissors",1],["🎒","backpack"],["📏","ruler"],["📚","books",1],["🏫","school"]]],
+["shapes","Shapes","🔷","#29b6f6",1,[["🔵","circle"],["🟥","square"],["🔺","triangle"],["⭐","star"],["❤️","heart"],["🔶","diamond"]]],
+["days","Days","📅","#66bb6a",0,[["Mon","Monday"],["Tue","Tuesday"],["Wed","Wednesday"],["Thu","Thursday"],["Fri","Friday"],["Sat","Saturday"],["Sun","Sunday"]]],
+["jobs","Jobs","👩‍🏫","#5c6bc0",1,[["👩‍⚕️","doctor"],["👩‍🏫","teacher"],["👨‍🍳","cook"],["👮","police officer"],["🧑‍🚒","firefighter"],["👨‍🌾","farmer"],["🧑‍✈️","pilot"],["🧑‍🎨","artist"]],2],
+["places","Places","🏙️","#00897b",1,[["🏠","house"],["🏫","school"],["🏥","hospital"],["🏪","shop"],["🏦","bank"],["✈️","airport"],["🌳","park"],["🏖️","beach"]],2],
+["actions","Actions","🏃","#ef6c00",0,[["🏃","run",0,"Which one is running?"],["🚶","walk",0,"Which one is walking?"],["🏊","swim",0,"Which one is swimming?"],["📖","read",0,"Which one is reading?"],["✍️","write",0,"Which one is writing?"],["🍽️","eat",0,"Which one is eating?"],["😴","sleep",0,"Which one is sleeping?"],["💃","dance",0,"Which one is dancing?"]],2],
+["feelings","Feelings","😀","#d81b60",0,[["😀","happy",0,"Which one is happy?"],["😢","sad",0,"Which one is sad?"],["😠","angry",0,"Which one is angry?"],["😴","tired",0,"Which one is tired?"],["😨","scared",0,"Which one is scared?"],["😲","surprised",0,"Which one is surprised?"]],2],
+["travel","Travel","🧳","#0288d1",1,[["🛂","passport",0,"","I show my passport at the airport."],["🎫","ticket",0,"","I bought a train ticket online."],["🧳","luggage",0,"","Her luggage was very heavy."],["🏨","hotel",0,"","We stayed in a hotel near the beach."],["🗺️","map",0,"","Use the map to find the museum."],["🚆","train",0,"","The train leaves at nine o’clock."],["🛫","flight",0,"","Our flight was two hours late."]],[4]],
+["tech","Technology","💻","#5e35b1",1,[["💻","laptop",0,"","I do my homework on my laptop."],["⌨️","keyboard",0,"","Press a letter on the keyboard."],["🖱️","mouse",0,"","Click the button with the mouse."],["🔋","battery",0,"","My phone battery is almost empty."],["🌐","internet",0,"","I search for answers on the internet."],["🔐","password",0,"","Never share your password with anyone."],["🎧","headphones",1,"","He listens to music with headphones."]],[4]],
+["health","Health","🩺","#e53935",1,[["💊","medicine",0,"","Take your medicine after lunch."],["🌡️","thermometer",0,"","The thermometer shows a high fever."],["🩹","bandage",0,"","She put a bandage on her knee."],["🏋️","exercise",0,"","Daily exercise keeps you strong."],["🥗","salad",0,"","A salad is a healthy meal."],["🧼","soap",0,"","Wash your hands with soap."]],[4]],
+["work","Work","💼","#546e7a",1,[["🏢","office",0,"","My mother works in an office."],["📧","email",0,"","I sent an email to my teacher."],["🤝","meeting",0,"","The meeting starts at ten."],["💰","salary",0,"","He gets his salary every month."],["📅","schedule",0,"","Check the schedule for tomorrow."],["⏰","deadline",0,"","The deadline is on Friday."],["👥","team",0,"","Our team won the game."]],[4]]];
+const T=(id,name,icon,col,ws)=>[id,name,icon,col,1,ws.map(([e,w,s,pl])=>[e,w,pl||0,"",s]),[4]];
+DEF.push(
+T("env","Environment & Energy","🌍","#2e7d32",[["🌍","climate","Climate change is warming our planet."],["♻️","recycling","Recycling helps reduce waste."],["☀️","solar","Solar panels turn sunlight into electricity."],["⛽","fuel","Cars burn fuel and release carbon dioxide."],["🏭","pollution","Factory smoke causes air pollution."],["🌊","flood","Heavy rain caused a flood in the city."],["🏜️","drought","A long drought left the farms dry."]]),
+T("nature","Animals & Plants","🌿","#558b2f",[["🧬","gene","Each gene carries information for a trait."],["🦋","insect","A butterfly is an insect with four wings."],["🌱","seed","Every plant grows from a seed."],["🍃","leaf","A leaf uses sunlight to make food."],["🦈","predator","A shark is a powerful predator."],["🦠","bacteria","Some bacteria are harmful, but many are helpful.",1],["🦎","reptile","A lizard is a reptile."]]),
+T("psych","Psychology & Brain","🧠","#8e24aa",[["🧠","brain","The brain controls the whole body."],["💭","memory","Good sleep improves your memory."],["😰","stress","Exams can cause stress."],["😊","emotion","Joy is a strong emotion."],["🧩","behavior","Her behavior changed after the move."],["💤","habit","Brushing your teeth is a good habit."],["🎯","motivation","Clear goals give you motivation."]]),
+T("edu","Education & Development","🎓","#1565c0",[["🎓","graduate","She will graduate from university next year."],["📝","exam","I studied hard for the exam."],["👶","infant","An infant learns language by listening."],["🧒","teenager","A teenager needs about nine hours of sleep."],["🏅","scholarship","He won a scholarship to study abroad."],["📚","curriculum","The school curriculum includes science and art."],["🤝","cooperation","Group work teaches cooperation."]]),
+T("ai","AI & Engineering","🤖","#3949ab",[["🤖","robot","A robot can build cars in a factory."],["💡","algorithm","An algorithm is a set of steps to solve a problem."],["🌉","bridge","Engineers designed a bridge over the river."],["⚙️","machine","This machine sorts packages automatically."],["📡","sensor","A sensor detects heat and movement."],["🔌","circuit","Electricity flows through a circuit."],["🗄️","data","AI learns patterns from large amounts of data."]]),
+T("biz","Business & Innovation","🚀","#ef6c00",[["💡","innovation","Innovation helps companies grow."],["📈","profit","The shop made a good profit this year."],["🛒","customer","Every customer wants good service."],["🏭","factory","The factory produces a thousand bikes a day."],["🤝","negotiate","They negotiate the price before they sign."],["📊","strategy","A clear strategy leads to success."],["💼","manager","The manager leads the team."]]),
+T("med","Medicine & Nutrition","🥦","#43a047",[["💉","vaccine","A vaccine protects you from serious disease."],["🍊","vitamin","Oranges are rich in vitamin C."],["🍬","sugar","Too much sugar is bad for your teeth."],["🥩","protein","Meat and beans are good sources of protein."],["🩸","blood","Blood carries oxygen around the body."],["🫀","heart","The heart pumps blood through the body."],["🦠","virus","A virus can spread quickly in winter."]]),
+T("art","Art & Architecture","🎨","#d81b60",[["🎨","painting","This painting shows a quiet village."],["🗿","sculpture","The sculpture was carved from stone."],["📖","novel","She wrote a novel about a lost island."],["✒️","poem","He read a poem about spring."],["🏛️","architecture","Ancient architecture used tall columns."],["🏰","castle","The castle stands on a hill."],["🎭","theater","We watched a play at the theater."]]),
+T("hist","History & Archaeology","🏺","#6d4c41",[["🏺","ancient","Ancient people made pots from clay."],["⛏️","excavate","Scientists excavate old cities to learn about the past."],["📜","manuscript","The manuscript is over five hundred years old."],["👑","empire","The Roman empire was very large."],["⚔️","battle","The battle lasted three days."],["🗽","statue","A giant statue guards the temple."],["🏛️","civilization","Egypt was a great civilization."]]),
+T("urban","Cities & Tourism","🏙️","#00838f",[["🏙️","urban","Urban life is busy and fast."],["🚇","transport","Public transport reduces traffic."],["🧳","tourist","Every tourist visits the old town."],["👥","population","The city’s population is growing every year."],["🏘️","suburb","They live in a quiet suburb."],["🎎","culture","Food is an important part of culture."],["🤝","community","The community built a new park."]]),
+T("space","Space","🪐","#283593",[["🪐","planet","Saturn is a planet with rings."],["🌙","moon","The moon circles the Earth."],["☄️","comet","A comet has a long bright tail."],["🚀","rocket","The rocket launched at dawn."],["🔭","telescope","We saw Jupiter through a telescope."],["🌌","galaxy","Our galaxy contains billions of stars."],["🛰️","satellite","A satellite sends photos from space."]])
+);
+const Q=w=>"Which picture shows “"+w+"”?";
+const T2=(id,name,icon,col,the,ws,qf)=>[id,name,icon,col,the,ws.map(([e,w,s,pl])=>[e,w,pl||0,qf?Q(w):"",s]),[2]];
+DEF.push(
+T2("appear","Appearance","👀","#8d6e63",0,[["🦒","tall","My uncle is very tall."],["🐭","short","My brother is short for his age."],["🌀","curly","Her hair is long and curly."],["📏","straight","He has straight black hair."],["👱","blond","The baby has blond hair."],["👨‍🦲","bald","My grandfather is bald."],["🧒","young","A young girl waved at me."],["👴","elderly","The elderly man sat on the bench."]],1),
+T2("person","Personality","😊","#f06292",0,[["🤗","friendly","Our new neighbor is very friendly."],["🙈","shy","He is shy and rarely speaks in class."],["🎁","generous","She is generous and shares her lunch."],["🦥","lazy","A lazy person never does homework."],["🦁","brave","The brave boy saved the dog."],["✋","honest","Be honest and tell the truth."],["🙏","polite","A polite student says thank you."],["🐂","stubborn","My stubborn brother never changes his mind."],["🔍","curious","Curious children ask many questions."],["⏳","patient","A patient teacher explains it again."]],1),
+T2("life","Life Events","🎂","#7cb342",0,[["👶","be born","Many babies can be born early."],["🏫","start school","Children start school at five or six."],["🎒","leave school","Most students leave school at eighteen."],["💼","get a job","She wants to get a job after college."],["💍","get married","They plan to get married next summer."],["👨‍👩‍👧","have children","They want to have children one day."],["🚪","leave home","Many young people leave home at eighteen."],["📦","move home","We will move home in July."],["🎓","go to university","He hopes to go to university in London."],["📜","get a degree","You need three years to get a degree."],["🏖️","retire","Many people retire at sixty-five."]],1),
+T2("crime","Crime","🚨","#455a64",1,[["🚨","crime","Crime is lower in this neighborhood."],["🦹","criminal","The criminal escaped through a window."],["🥷","thief","A thief stole my bike."],["🕵️","detective","The detective studied the footprints."],["👮","arrest","The police arrest anyone who breaks the law."],["🔍","evidence","The evidence was found under the bed."],["⚖️","court","The case went to court."],["🔒","prison","He spent two years in prison."]]),
+T2("cityprob","City Problems","🚦","#78909c",1,[["🚗","traffic","Traffic is heavy at eight o’clock."],["🔊","noise","The noise from the road keeps me awake."],["🗑️","litter","Litter makes the park look dirty."],["👥","overcrowding","Overcrowding is a big problem in the metro."],["🖌️","graffiti","Someone painted graffiti on the wall."],["📉","unemployment","Unemployment is high in this area."],["🏭","pollution","Air pollution is a danger to health."],["🏠","housing","Cheap housing is hard to find."]]),
+T2("money","Money & Shopping","🛍️","#e69500",1,[["🏷️","price","The price of the jacket is too high."],["🔖","discount","They give a discount on Mondays."],["🧾","receipt","Keep the receipt in case you need a refund."],["💵","cash","I paid in cash."],["🛍️","bargain","This coat was a real bargain."],["↩️","refund","I asked for a refund."],["🐷","savings","Her savings will pay for the trip.",1],["🧺","basket","Put the apples in the basket."]]),
+T2("intl","Traveling Abroad","🛂","#039be5",1,[["🛂","visa","You need a visa to enter that country."],["🛃","customs","We waited in line at customs.",1],["🚧","border","The border closes at midnight."],["💱","currency","The local currency is the euro."],["⏳","delay","A long delay made us miss our train."],["📍","destination","Our destination is Rome."],["🗓️","itinerary","The itinerary includes three cities."],["🏛️","embassy","He went to the embassy to ask for help."]]),
+T2("rel","Relationships","🤝","#ad1457",1,[["🤝","friendship","Their friendship lasted fifty years."],["🗯️","argue","Please do not argue in front of the children."],["🔐","trust","Trust takes time to build."],["🙇","apologize","I want to apologize for being late."],["🙏","respect","Show respect to your teachers."],["🏘️","neighbor","My neighbor waters my plants."],["💼","colleague","My colleague gave me a lift to work."],["👪","relative","My closest relative lives in Hanoi."]]),
+T2("ill","Illness & Injury","🤒","#c62828",0,[["🤧","cold","I caught a cold last week."],["🤒","flu","The flu spreads easily in winter."],["🤕","headache","I have a terrible headache."],["🌡️","fever","She has a high fever."],["😷","cough","A bad cough kept him awake."],["🌼","allergy","Pollen causes my allergy."],["🦶","sprain","He got a sprain while running."],["🟣","bruise","A bruise appeared on her arm."],["🦴","fracture","The X-ray showed a fracture in his leg."]],1),
+T2("coll","Thinking Phrases","💭","#6a1b9a",0,[["💭","cross your mind","Did it ever cross your mind to call her?"],["🤫","give someone a hint","Could you give someone a hint about the answer?"],["💡","have a thought","Let me have a thought about it."],["🤔","have second thoughts","I might have second thoughts about the trip."],["😵","lose your concentration","Do not lose your concentration during the test."],["🧭","make up your mind","Please make up your mind before the shop closes."],["🎨","use your imagination","Use your imagination to write a story."]],1),
+T2("ent","Art & Entertainment","🎬","#00acc1",1,[["🎬","film","We watched a funny film on Friday."],["🎭","actor","The actor forgot his lines."],["🎤","concert","The concert starts at eight."],["🖼️","exhibition","The exhibition shows modern paintings."],["👏","audience","The audience clapped for ten minutes."],["🎪","stage","She walked onto the stage."],["😂","comedy","A good comedy makes everyone laugh."],["🏛️","gallery","The gallery is free on Sundays."],["🎉","festival","The festival has music and food."]])
+);
+const defaults=()=>DEF.map(([id,name,icon,col,the,w,lv])=>({id,name,icon,col,the,lvs:Array.isArray(lv)?lv:(lv===2?[2,3]:[1,3]),words:w.map(([e,w,pl,q,s])=>({e,w,pl:!!pl,q:q||"",s:s||""}))}));
+const KEY="little-english-v1";
+let cats=null;
+try{cats=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!Array.isArray(cats)||!cats.length)cats=defaults();
+cats.forEach(c=>{if(!Array.isArray(c.lvs))c.lvs=(c.lv===2?[2,3]:[1,3]);delete c.lv});
+let seeded=[];try{seeded=JSON.parse(localStorage.getItem("le-seeded2"))||[]}catch(e){}
+let added=false;
+defaults().forEach(d=>{if(!seeded.includes(d.id)&&!cats.some(c=>c.id===d.id)){cats.push(d);added=true}});
+if(added)try{localStorage.setItem(KEY,JSON.stringify(cats))}catch(e){}
+try{localStorage.setItem("le-seeded2",JSON.stringify(defaults().map(d=>d.id)))}catch(e){}
+let level=1;try{level=+localStorage.getItem("le-level")||1}catch(e){}
+if(![1,2,3,4].includes(level))level=1;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(cats));const m=g("msg");if(m)m.textContent=""}catch(e){const m=g("msg");if(m)m.textContent="Couldn’t save. Storage may be full, so try fewer photos."}}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function pic(it){const e=it.e||"";return it.img?'<img src="'+it.img+'" alt="">':e[0]==="#"?'<span class="dot" style="background:'+esc(e)+'"></span>':/^[A-Za-z]/.test(e)?'<span class="txt">'+esc(e)+'</span>':esc(e)}
+const valid=c=>c.words.filter(x=>x.w&&x.w.trim());
+const autoQ=(it,c)=>"Where "+(it.pl?"are":"is")+" "+(c.the?"the ":"")+(it.w||"…").trim()+"?";
+const ask=(it,c)=>(it.q&&it.q.trim())||autoQ(it,c);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* sound */
+let ac;
+function audio(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}}
+function tone(f,t0,d,type){if(!ac)return;const t=ac.currentTime+t0,o=ac.createOscillator(),gn=ac.createGain();o.type=type||"sine";o.frequency.value=f;gn.gain.setValueAtTime(.25,t);gn.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(gn);gn.connect(ac.destination);o.start(t);o.stop(t+d)}
+const cheer=()=>{tone(523,0,.15);tone(659,.12,.15);tone(784,.24,.3)};
+const boop=()=>tone(180,0,.25,"triangle");
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.8;u.pitch=1.15;speechSynthesis.speak(u)}catch(e){}}
+const topbar=(b,m)=>'<div class="top"><button id="back" aria-label="Back">'+b+'</button><div class="stars">'+(m||"")+'</div><span style="width:70px"></span></div>';
+
+/* kid screens */
+const LV=[[1,"🐣 4–6"],[3,"🌱 6–8"],[2,"📘 8–14"],[4,"🎓 14+"]];
+function setLevel(n){level=n;try{localStorage.setItem("le-level",n)}catch(e){}home()}
+function home(){
+  const L=cats.filter(c=>(c.lvs||[]).includes(level));
+  $.innerHTML='<h1 id="ttl">Opus English</h1><div class="row" style="gap:6px">'+LV.map(([n,t])=>'<button class="lvl'+(level===n?' on':'')+'" data-n="'+n+'">'+t+'</button>').join("")+'</div><div class="grid">'+L.map(c=>'<button class="tile" data-id="'+c.id+'" style="background:'+c.col+'"><span class="big">'+esc(c.icon)+'</span>'+esc(c.name)+'</button>').join("")+'</div>'+(L.length?'':'<p class="hint" style="text-align:center">No topics here yet.</p>');
+  $.querySelectorAll(".lvl").forEach(b=>b.onclick=()=>setLevel(+b.dataset.n));
+  $.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{audio();const c=cats.find(x=>x.id===b.dataset.id);say(c.name);menu(c.id)});
+  let n=0,t0=0;g("ttl").onclick=()=>{const now=Date.now();n=now-t0<1500?n+1:1;t0=now;if(n>=5){n=0;pin()}};
+}
+const PIN="2468";
+function pin(){
+  $.innerHTML=topbar("🏠")+'<div class="q">Teacher</div><input id="pn" class="tin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN"><button id="ok" style="background:#6ccf6c;font-size:28px;padding:12px">✔</button>';
+  g("back").onclick=home;
+  const go=()=>{const i=g("pn");if(i.value===PIN)admin();else{i.value="";i.classList.remove("shake");void i.offsetWidth;i.classList.add("shake")}};
+  g("ok").onclick=go;g("pn").onkeydown=e=>{if(e.key==="Enter")go()};
+}
+function menu(id){
+  const c=cats.find(x=>x.id===id),W=valid(c),B=(i,ic,t,col)=>'<button class="tile" id="'+i+'" style="background:'+col+'"><span class="big">'+ic+'</span>'+t+'</button>';
+  const T=[B("l","👀","Look","#ff7a59")],A={l:()=>learn(id,0)};
+  if(level===1){T.push(B("p","🎮","Play","#8e6bff"));A.p=()=>game(id)}
+  else if(level===3){T.push(B("p","🎮","Play","#8e6bff"),B("rd","📖","Read","#4cb8ff"),B("sp","✍️","Spell","#26a69a"));A.p=()=>game(id);A.rd=()=>game(id,true);A.sp=()=>spell(id)}
+  else{T.push(B("sp","✍️","Spell","#8e6bff"),B("ty","🎧","Listen &amp; type","#26a69a"),B("rd","📖","Read &amp; pick","#4cb8ff"));A.sp=()=>spell(id);A.ty=()=>typeGame(id);A.rd=()=>game(id,true);
+    if(W.some(x=>blank(x))){T.push(B("fl","✏️","Fill the blank","#ef6c00"));A.fl=()=>fill(id)}}
+  $.innerHTML=topbar("🏠")+(T.length>2?'<div class="grid">'+T.join("")+'</div>':T.join(""));
+  g("back").onclick=home;
+  Object.keys(A).forEach(k=>g(k).onclick=()=>{if(W.length)A[k]()});
+}
+function learn(id,i){
+  const c=cats.find(x=>x.id===id),W=valid(c),n=W.length;i=(i+n)%n;const it=W[i];
+  $.innerHTML=topbar("🏠")+'<div class="card" id="c"><div class="pic">'+pic(it)+'</div><div class="word">'+esc(it.w)+'</div></div><div class="row"><button id="p" style="background:#4cb8ff">◀</button><button id="s" style="background:#ff7a59">🔊</button><button id="n" style="background:#4cb8ff">▶</button></div>';
+  g("back").onclick=()=>menu(id);
+  const sp=()=>{say(it.w);const d=g("c");d.classList.remove("pop");void d.offsetWidth;d.classList.add("pop")};
+  g("c").onclick=sp;g("s").onclick=sp;
+  g("p").onclick=()=>{learn(id,i-1);say(W[(i-1+n)%n].w)};
+  g("n").onclick=()=>{learn(id,i+1);say(W[(i+1)%n].w)};
+}
+function game(id,rd){
+  const c=cats.find(x=>x.id===id),W=valid(c),rounds=shuffle(W).slice(0,5),total=rounds.length;let r=0,stars=0;
+  function next(){
+    if(r>=total)return end();
+    const t=rounds[r],opts=shuffle([t].concat(shuffle(W.filter(x=>x!==t)).slice(0,2)));
+    let missed=false,done=false;const q=ask(t,c);
+    $.innerHTML=topbar("🏠","⭐".repeat(stars)+"☆".repeat(total-stars))+'<div class="q"'+(rd?' style="font-size:48px"':'')+'>'+esc(rd?t.w:q)+'</div><button id="h" style="background:#ff7a59;font-size:36px;padding:10px">🔊</button><div class="choices">'+opts.map((o,i)=>'<button class="choice" data-i="'+i+'">'+pic(o)+'</button>').join("")+'</div>';
+    g("back").onclick=()=>menu(id);g("h").onclick=()=>say(rd?t.w:q);if(!rd)say(q);
+    $.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+      if(done)return;
+      if(opts[b.dataset.i]===t){done=true;cheer();b.classList.add("pop");b.style.background="#c8f5c8";if(!missed)stars++;setTimeout(()=>say("Great job!"),350);r++;setTimeout(next,1800)}
+      else{missed=true;boop();b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake");say("Try again")}
+    });
+  }
+  function end(){
+    $.innerHTML=topbar("🏠")+'<div class="trophy">🏆</div><div class="q">'+"⭐".repeat(stars)+'</div><button class="tile" id="a" style="background:#8e6bff"><span class="big">🔁</span></button>';
+    g("back").onclick=()=>menu(id);g("a").onclick=()=>game(id,rd);cheer();say("Well done!");
+  }
+  next();
+}
+
+/* ages 8-14 games */
+const blip=()=>tone(660,0,.08);
+const bar=(st,tt)=>"⭐".repeat(st)+"☆".repeat(tt-st);
+function fin(id,stars,again){
+  $.innerHTML=topbar("🏠")+'<div class="trophy">🏆</div><div class="q">'+"⭐".repeat(stars)+'</div><button class="tile" id="a" style="background:#8e6bff"><span class="big">🔁</span></button>';
+  g("back").onclick=()=>menu(id);g("a").onclick=again;cheer();say("Well done!");
+}
+function spell(id){
+  const c=cats.find(x=>x.id===id),W=valid(c),rounds=shuffle(W).slice(0,5),total=rounds.length;let r=0,stars=0;
+  function next(){
+    if(r>=total)return fin(id,stars,()=>spell(id));
+    const t=rounds[r],ch=[...t.w.trim()],slots=ch.map(x=>x===" "?" ":""),tiles=shuffle(ch.filter(x=>x!==" ").map(x=>({x,used:false})));
+    let missed=false;
+    function draw(){
+      $.innerHTML=topbar("🏠",bar(stars,total))+'<div class="card"><div class="pic" style="height:130px;font-size:100px">'+pic(t)+'</div></div><button id="h" style="background:#ff7a59;font-size:30px;padding:8px 20px;align-self:center">🔊</button><div class="slots">'+slots.map(s=>'<span class="slot'+(s===" "?" gap":"")+'">'+esc(s.trim())+'</span>').join("")+'</div><div class="tiles">'+tiles.map((k,i)=>'<button class="lt'+(k.used?" used":"")+'" data-i="'+i+'">'+esc(k.x)+'</button>').join("")+'</div>';
+      g("back").onclick=()=>menu(id);g("h").onclick=()=>say(t.w);
+      $.querySelectorAll(".lt").forEach(b=>b.onclick=()=>{
+        const k=tiles[b.dataset.i],pos=slots.indexOf("");
+        if(k.used||pos<0)return;
+        if(k.x.toLowerCase()===ch[pos].toLowerCase()){
+          k.used=true;slots[pos]=ch[pos];blip();
+          if(slots.indexOf("")<0){draw();cheer();if(!missed)stars++;say(t.w);r++;setTimeout(next,1800)}else draw();
+        }else{missed=true;boop();b.classList.remove("shake");void b.offsetWidth;b.classList.add("shake")}
+      });
+    }
+    draw();say(t.w);
+  }
+  next();
+}
+function typeGame(id){
+  const c=cats.find(x=>x.id===id),W=valid(c),rounds=shuffle(W).slice(0,5),total=rounds.length;let r=0,stars=0;
+  const norm=s=>s.trim().toLowerCase().replace(/\s+/g," ");
+  function next(){
+    if(r>=total)return fin(id,stars,()=>typeGame(id));
+    const t=rounds[r];let tries=0,done=false;
+    $.innerHTML=topbar("🏠",bar(stars,total))+'<div class="q">Listen and type</div><button id="h" style="background:#ff7a59;font-size:48px;padding:14px;align-self:center">🔊</button><div id="clue" class="pic" style="height:110px;font-size:80px"></div><input id="in" class="tin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="…"><button id="ok" style="background:#6ccf6c;font-size:28px;padding:12px">✔</button>';
+    g("back").onclick=()=>menu(id);g("h").onclick=()=>say(t.w);say(t.w);
+    const inp=g("in");
+    function check(){
+      if(done)return;
+      if(norm(inp.value)===norm(t.w)){done=true;cheer();if(!tries)stars++;g("clue").innerHTML=pic(t);setTimeout(()=>say("Great job!"),350);r++;setTimeout(next,1800)}
+      else{tries++;boop();inp.classList.remove("shake");void inp.offsetWidth;inp.classList.add("shake");
+        if(tries>=3){done=true;inp.value=t.w;g("clue").innerHTML=pic(t);say(t.w);r++;setTimeout(next,2600)}
+        else{if(tries===1)g("clue").innerHTML=pic(t);say("Try again")}}
+    }
+    g("ok").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter")check()};
+  }
+  next();
+}
+
+const blank=it=>{const w=(it.w||"").trim(),t=it.s||"";if(!w||!t)return null;const re=new RegExp("\\b"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b","i");return re.test(t)?t.replace(re,"_____"):null};
+function fill(id){
+  const c=cats.find(x=>x.id===id),W=valid(c),P=shuffle(W.filter(x=>blank(x))).slice(0,5),total=P.length;let r=0,stars=0;
+  function next(){
+    if(r>=total)return fin(id,stars,()=>fill(id));
+    const t=P[r],opts=shuffle([t].concat(shuffle(W.filter(x=>x!==t)).slice(0,2))),b=blank(t),spoken=b.replace("_____","blank");let missed=false,done=false;
+    $.innerHTML=topbar("🏠",bar(stars,total))+'<div class="card"><div class="word" id="sen" style="font-size:30px;line-height:1.3">'+esc(b)+'</div></div><button id="h" style="background:#ff7a59;font-size:30px;padding:8px 20px;align-self:center">🔊</button><div class="choices">'+opts.map((o,i)=>'<button class="fch" data-i="'+i+'">'+esc(o.w)+'</button>').join("")+'</div>';
+    g("back").onclick=()=>menu(id);g("h").onclick=()=>say(done?t.s:spoken);say(spoken);
+    $.querySelectorAll(".fch").forEach(bt=>bt.onclick=()=>{
+      if(done)return;
+      if(opts[bt.dataset.i]===t){done=true;cheer();bt.classList.add("pop");bt.style.background="#c8f5c8";g("sen").textContent=t.s;if(!missed)stars++;setTimeout(()=>say(t.s),350);r++;setTimeout(next,2800)}
+      else{missed=true;boop();bt.classList.remove("shake");void bt.offsetWidth;bt.classList.add("shake");say("Try again")}
+    });
+  }
+  if(!total)return menu(id);
+  next();
+}
+
+/* teacher screens */
+function admin(){
+  $.innerHTML=topbar("🏠")+'<h1 style="font-size:26px">Edit topics</h1>'+cats.map(c=>'<button class="tile" data-id="'+c.id+'" style="background:'+c.col+';flex-direction:row;font-size:22px;justify-content:flex-start;padding:10px 18px"><span class="big" style="font-size:36px">'+esc(c.icon)+'</span>'+esc(c.name)+'</button>').join("")+'<div class="acts"><button id="nt">+ New topic</button><button id="rs" class="alt">Reset everything</button></div><p id="msg" class="hint"></p>';
+  g("back").onclick=home;
+  $.querySelectorAll(".tile").forEach(b=>b.onclick=()=>edit(b.dataset.id));
+  g("nt").onclick=()=>{const pal=["#ef5350","#ab47bc","#26c6da","#9ccc65","#ffa726","#8d6e63"];const c={id:"t"+Date.now(),name:"New topic",icon:"⭐",col:pal[cats.length%pal.length],the:1,lvs:[level],words:[{e:"⭐",w:"",pl:false,q:""}]};cats.push(c);save();edit(c.id)};
+  let armed=false;
+  g("rs").onclick=()=>{if(!armed){armed=true;g("rs").textContent="Tap again to reset";setTimeout(()=>{armed=false;if(g("rs"))g("rs").textContent="Reset everything"},3000);return}cats=defaults();save();admin()};
+}
+let pend=null;
+function fileToData(f,cb){const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,240/Math.max(im.width,im.height)),cv=document.createElement("canvas");cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);cb(cv.toDataURL("image/jpeg",.8))};im.src=rd.result};rd.readAsDataURL(f)}
+g("file").onchange=()=>{const f=g("file").files[0];if(f&&pend){fileToData(f,d=>{pend.img=d;save();pend.rerender()})}g("file").value=""};
+function edit(id){
+  const c=cats.find(x=>x.id===id);
+  $.innerHTML=topbar("◀")+'<div class="erow"><div class="l1"><input id="tn" class="w" placeholder="Topic name"><input id="ti" class="em" maxlength="4" placeholder="🙂"></div><div class="l2"><label><input type="checkbox" id="tt"> Say “the” (Where is the…?)</label></div><div class="l2 wrapl"><span class="hint">Show in:</span><label><input type="checkbox" class="lvc" data-l="1"> 4–6</label><label><input type="checkbox" class="lvc" data-l="3"> 6–8</label><label><input type="checkbox" class="lvc" data-l="2"> 8–14</label><label><input type="checkbox" class="lvc" data-l="4"> 14+</label></div></div><p class="hint">Word: what the child sees and hears. Question: leave empty for an automatic one. Tick “plural” for words like shoes (Where are the shoes?). Tap 📷 to use your own picture.</p><div id="list" style="display:flex;flex-direction:column;gap:8px"></div><div class="acts"><button id="add">+ Add word</button><button id="dt" class="alt">Delete topic</button></div><p id="msg" class="hint"></p>';
+  g("back").onclick=admin;
+  const tn=g("tn"),ti=g("ti"),tt=g("tt");tn.value=c.name;ti.value=c.icon;tt.checked=!!c.the;
+  tn.oninput=()=>{c.name=tn.value;save()};ti.oninput=()=>{c.icon=ti.value;save()};tt.onchange=()=>{c.the=tt.checked?1:0;save();rows()};document.querySelectorAll(".lvc").forEach(k=>{const n=+k.dataset.l;k.checked=(c.lvs||[]).includes(n);k.onchange=()=>{const st=new Set(c.lvs||[]);if(k.checked)st.add(n);else st.delete(n);c.lvs=[...st];save()}});
+  function rows(){
+    const L=g("list");L.innerHTML="";
+    c.words.forEach((it,i)=>{
+      const r=document.createElement("div");r.className="erow";
+      r.innerHTML='<div class="l1"><div class="th"></div><input class="w" placeholder="word"><input class="em" maxlength="9" placeholder="😀"><button class="ic cam" aria-label="Picture">📷</button><button class="ic del" aria-label="Delete">✕</button></div><div class="l2"><input class="qin" placeholder=""><label><input type="checkbox" class="pl"> plural</label></div><div class="l2"><input class="sin" placeholder="Example sentence (for Fill the blank)"></div>';
+      const th=r.querySelector(".th"),w=r.querySelector(".w"),em=r.querySelector(".em"),q=r.querySelector(".qin"),pl=r.querySelector(".pl");
+      const draw=()=>{th.innerHTML=pic(it);q.placeholder=autoQ(it,c)};
+      draw();w.value=it.w;em.value=it.e||"";q.value=it.q||"";pl.checked=!!it.pl;
+      w.oninput=()=>{it.w=w.value;save();draw()};
+      em.oninput=()=>{it.e=em.value;delete it.img;save();draw()};
+      q.oninput=()=>{it.q=q.value;save()};const sn=r.querySelector(".sin");sn.value=it.s||"";sn.oninput=()=>{it.s=sn.value;save()};
+      pl.onchange=()=>{it.pl=pl.checked;save();draw()};
+      r.querySelector(".cam").onclick=()=>{pend=it;it.rerender=()=>{delete it.rerender;rows()};g("file").click()};
+      r.querySelector(".del").onclick=()=>{c.words.splice(i,1);save();rows()};
+      L.appendChild(r);
+    });
+  }
+  rows();
+  g("add").onclick=()=>{c.words.push({e:"⭐",w:"",pl:false,q:""});save();rows();g("list").lastChild.querySelector(".w").focus()};
+  let armed=false;
+  g("dt").onclick=()=>{if(!armed){armed=true;g("dt").textContent="Tap again to delete";setTimeout(()=>{armed=false;if(g("dt"))g("dt").textContent="Delete topic"},3000);return}cats=cats.filter(x=>x.id!==id);if(!cats.length)cats=defaults();save();admin()};
+}
+home();
+</script>
+</body>
+</html>
